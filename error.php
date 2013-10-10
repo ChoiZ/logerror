@@ -1,15 +1,21 @@
 <?php
-/*
- * Error.php v1.0.0 - Log php errors
- * http://www.logerror.net
+/**
+ * Error
+ * Log php errors
  *
- * Last modified: 2013-10-10
- * Author: François LASSERRE <choiz@me.com>
- * License: GNU GPL http://www.gnu.org/licenses/gpl.html
+ * @author François LASSERRE <choiz@me.com>
+ * @version 1.0.0
+ * $license http://www.gnu.org/licenses/gpl.html GNU Public License
  */
-
 class Error {
 
+  /* public __construct() {{{ */
+  /**
+   * __construct
+   *
+   * @access public
+   * @return void
+   */
   public function __construct() {
 
     $sql = "INSERT INTO `error`
@@ -32,5 +38,6 @@ class Error {
     $query->execute($params);
 
   }
+  /* }}} */
 
 }
