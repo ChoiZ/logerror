@@ -1,43 +1,52 @@
 <?php
+
+namespace LogError;
+
+use LogError\Db as Db;
+
 /**
- * Error
+ * LogError
  * Log php errors
  *
  * @author François LASSERRE <choiz@me.com>
- * @version 1.0.0
+ * @version 1.1.0
  * $license http://www.gnu.org/licenses/gpl.html GNU Public License
  */
-class Error {
+class LogError
+{
+    public function __construct($datas, $session)
+    {
+        $this->db = Db::getInstance();
 
-  /* public __construct() {{{ */
-  /**
-   * __construct
-   *
-   * @access public
-   * @return void
-   */
-  public function __construct() {
+        $sql = "INSERT INTO `LogError`
+            SET `id`=NULL,
+                `type`=:type,
+                `file`=:file,
+                `msg`=:msg,
+                `line`=:line,
+                `column`=:column,
+                `trace`=:trace,
+                `url`=:url,
+                `user_agent`=:user_agent,
+                `session`=:session,
+                `date`=NOW();
+        ";
 
-    $sql = "INSERT INTO `error`
-      (`id`, `type`, `file`, `msg`, `line`, `url`,
-       `useragent`,
-       `session`, `date`)
-      VALUES (NULL, :type, :file, :msg,
-          :line, :url, :ua, :sess,
-          NOW());";
-    $query = $db->prepare($sql);
-    $params = array(
-        ":type" => $_POST["type"],
-        ":file" => $_POST["file"],
-        ":msg" => $_POST["msg"],
-        ":line" => $_POST["line"],
-        ":url" => $_POST["url"],
-        ":ua" => $_POST["ua"],
-        ":sess" => serialize($_SESSION),
-        );
-    $query->execute($params);
+        $query = $this->db->prepare($sql);
 
-  }
-  /* }}} */
+        $params = [];
+        $params[':type'] = $datas['type'];
+        $params[':file'] = $datas['file'];
+        $params[':msg'] = $datas['msg'];
+        $params[':line'] = $datas['line'];
+        $params[':column'] = $datas['column'];
+        $params[':trace'] = $datas['trace'];
+        $params[':url'] = $datas['url'];
+        $params[':user_agent'] = $datas['user_agent'];
+        $params[':session'] = serialize($session);
 
+        $query->execute($params);
+
+        return true;
+    }
 }
